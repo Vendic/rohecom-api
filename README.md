@@ -1,14 +1,10 @@
 # Vendic_RoheconApi
 
-Secure, modern, **complete** replacement for the Rohecom **RHC-API** (`rohecom/unishop`) module.
+Rohecon (UniShop) RHC-API integration for Magento 2.
 
 It reproduces the entire original module — all REST endpoints, the `/rhc-api/version` frontend
 endpoint, and the non-API behaviour (price observer, swatch console command, and the two cron
 jobs) — using proper dependency injection and parameter-bound queries.
-
-The original module's order-status-via-comment behaviour is **not** reimplemented here: it is
-provided by the core patch that reverts AC-8998 (`OrderService::addComment` status validation),
-reused from the goedhartmotoren project.
 
 The HTTP contract is **identical** to the original so **UniShop needs no changes**. The only
 functional differences are bearer-token validation instead of anonymous access, and all known
@@ -16,25 +12,25 @@ security issues fixed.
 
 ## REST endpoints (`/V1/rhc-api/*`)
 
-| Method | URL | Service |
-|--------|-----|---------|
-| GET  | `/welcome` | `WelcomeInterface::welcome` |
-| GET  | `/product/:pid` | `ProductInterface::getProductSkuById` |
-| POST | `/product/websites` | `ProductInterface::getWebsiteIdsBySku` |
-| POST | `/productimage/remove` | `ProductInterface::removeProductImage` |
-| GET  | `/category/:cid/info` | `CategoryInterface::categoryInfoImageUrl` |
-| GET  | `/category/roots` | `CategoryInterface::getRootCategoryIds` |
-| POST | `/category/update-image` | `CategoryInterface::categoryUpdateImage` |
-| GET  | `/category/remove-image/:cid` | `CategoryInterface::categoryRemoveImage` |
-| GET  | `/partstreaminfo` | `PartstreamInterface::partstreamInfo` |
-| GET  | `/attribute/:aid/options/list` | `AttributeInterface::attributeOptionsList` |
-| POST | `/attribute/option/update` | `AttributeInterface::updateAttributeLabel` |
-| GET  | `/attribute/frontend-labels/:attributeId` | `AttributeInterface::getAttributeFrontendLabels` |
-| POST | `/file/add` | `FileInterface::fileAdd` |
-| GET  | `/file/exists/:filename` | `FileInterface::fileExists` |
-| GET  | `/file/list/:productId` | `FileInterface::fileList` |
-| GET  | `/file/remove/:productId/:filename` | `FileInterface::unlinkFileFromProduct` |
-| GET  | `/file/update_position/:productId/:filename/:position` | `FileInterface::updatePosition` |
+| Method | URL                                                    | Service                                          |
+|--------|--------------------------------------------------------|--------------------------------------------------|
+| GET    | `/welcome`                                             | `WelcomeInterface::welcome`                      |
+| GET    | `/product/:pid`                                        | `ProductInterface::getProductSkuById`            |
+| POST   | `/product/websites`                                    | `ProductInterface::getWebsiteIdsBySku`           |
+| POST   | `/productimage/remove`                                 | `ProductInterface::removeProductImage`           |
+| GET    | `/category/:cid/info`                                  | `CategoryInterface::categoryInfoImageUrl`        |
+| GET    | `/category/roots`                                      | `CategoryInterface::getRootCategoryIds`          |
+| POST   | `/category/update-image`                               | `CategoryInterface::categoryUpdateImage`         |
+| GET    | `/category/remove-image/:cid`                          | `CategoryInterface::categoryRemoveImage`         |
+| GET    | `/partstreaminfo`                                      | `PartstreamInterface::partstreamInfo`            |
+| GET    | `/attribute/:aid/options/list`                         | `AttributeInterface::attributeOptionsList`       |
+| POST   | `/attribute/option/update`                             | `AttributeInterface::updateAttributeLabel`       |
+| GET    | `/attribute/frontend-labels/:attributeId`              | `AttributeInterface::getAttributeFrontendLabels` |
+| POST   | `/file/add`                                            | `FileInterface::fileAdd`                         |
+| GET    | `/file/exists/:filename`                               | `FileInterface::fileExists`                      |
+| GET    | `/file/list/:productId`                                | `FileInterface::fileList`                        |
+| GET    | `/file/remove/:productId/:filename`                    | `FileInterface::unlinkFileFromProduct`           |
+| GET    | `/file/update_position/:productId/:filename/:position` | `FileInterface::updatePosition`                  |
 
 All REST routes require the ACL resource **`Vendic_RoheconApi::api`** (see *Authentication*).
 
@@ -46,12 +42,12 @@ All REST routes require the ACL resource **`Vendic_RoheconApi::api`** (see *Auth
 
 ## Non-API behaviour
 
-| Type | Class | Trigger |
-|------|-------|---------|
+| Type     | Class                                      | Trigger                                                                               |
+|----------|--------------------------------------------|---------------------------------------------------------------------------------------|
 | Observer | `Observer\ConfigurableProductPriceCleanup` | `catalog_product_save_before` — strips price/special_price from configurable products |
-| Console | `Console\UpdateSizeSwatchTextCommand` | `bin/magento rohecom:catalog:update-swatch-text --attribute=<code>` |
-| Cron | `Cron\UpdateSizeTextSwatch` | every 15 min — backfills `auto_maat` text swatches |
-| Cron | `Cron\GalleryCleanupCron` | daily 05:17 — removes orphaned product gallery rows (disabled by default) |
+| Console  | `Console\UpdateSizeSwatchTextCommand`      | `bin/magento rohecom:catalog:update-swatch-text --attribute=<code>`                   |
+| Cron     | `Cron\UpdateSizeTextSwatch`                | every 15 min — backfills `auto_maat` text swatches                                    |
+| Cron     | `Cron\GalleryCleanupCron`                  | daily 05:17 — removes orphaned product gallery rows (disabled by default)             |
 
 The swatch backfill is shared by the command and cron via `Service\SwatchTextUpdater`.
 
@@ -80,17 +76,8 @@ already sends:
 Cron toggle: **Stores → Configuration → Vendic → Rohecon API → Cron → Gallery cleanup enabled**
 (`vendic_rohecon_api/cron/gallery_cleanup_cron_enabled`, default off).
 
-## Migration note — route / frontName collision
-
-The legacy `rohecom/unishop` package defines the **same** `/V1/rhc-api/*` routes **and** the same
-`rhc-api` frontend frontName. Both modules installed at once is unsupported (Magento errors on a
-duplicate frontName). Remove the old package at deploy time:
-
 ```bash
 composer remove rohecom/unishop
 bin/magento setup:upgrade
 bin/magento setup:di:compile
 ```
-
-A defensive `<sequence>` after `Rohecom_Unishop` is declared, but the legacy module must be fully
-removed.

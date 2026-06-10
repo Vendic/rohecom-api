@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ *
+ * Mirrors the original Rohecom RHC-API paths 1:1. The only difference is that
+ * every route now requires a Vendic_RoheconApi ACL resource, so the Magento
+ * bearer token sent by UniShop is actually validated (no anonymous access).
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!-- ===== Welcome ===== -->
+    <route url="/V1/rhc-api/welcome" method="GET">
+        <service class="Vendic\RoheconApi\Api\WelcomeInterface" method="welcome"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <!-- ===== Products ===== -->
+    <route url="/V1/rhc-api/product/:pid" method="GET">
+        <service class="Vendic\RoheconApi\Api\ProductInterface" method="getProductSkuById"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::product"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/product/websites" method="POST">
+        <service class="Vendic\RoheconApi\Api\ProductInterface" method="getWebsiteIdsBySku"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::product"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/productimage/remove" method="POST">
+        <service class="Vendic\RoheconApi\Api\ProductInterface" method="removeProductImage"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::product"/>
+        </resources>
+    </route>
+
+    <!-- ===== Categories ===== -->
+    <route url="/V1/rhc-api/category/:cid/info" method="GET">
+        <service class="Vendic\RoheconApi\Api\CategoryInterface" method="categoryInfoImageUrl"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::category"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/category/roots" method="GET">
+        <service class="Vendic\RoheconApi\Api\CategoryInterface" method="getRootCategoryIds"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::category"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/category/update-image" method="POST">
+        <service class="Vendic\RoheconApi\Api\CategoryInterface" method="categoryUpdateImage"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::category"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/category/remove-image/:cid" method="GET">
+        <service class="Vendic\RoheconApi\Api\CategoryInterface" method="categoryRemoveImage"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::category"/>
+        </resources>
+    </route>
+
+    <!-- ===== Partstream ===== -->
+    <route url="/V1/rhc-api/partstreaminfo" method="GET">
+        <service class="Vendic\RoheconApi\Api\PartstreamInterface" method="partstreamInfo"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <!-- ===== Attributes ===== -->
+    <route url="/V1/rhc-api/attribute/:aid/options/list" method="GET">
+        <service class="Vendic\RoheconApi\Api\AttributeInterface" method="attributeOptionsList"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::attribute"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/attribute/option/update" method="POST">
+        <service class="Vendic\RoheconApi\Api\AttributeInterface" method="updateAttributeLabel"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::attribute"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/attribute/frontend-labels/:attributeId" method="GET">
+        <service class="Vendic\RoheconApi\Api\AttributeInterface" method="getAttributeFrontendLabels"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::attribute"/>
+        </resources>
+    </route>
+
+    <!-- ===== Files ===== -->
+    <route url="/V1/rhc-api/file/add" method="POST">
+        <service class="Vendic\RoheconApi\Api\FileInterface" method="fileAdd"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/file/exists/:filename" method="GET">
+        <service class="Vendic\RoheconApi\Api\FileInterface" method="fileExists"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/file/list/:productId" method="GET">
+        <service class="Vendic\RoheconApi\Api\FileInterface" method="fileList"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/file/remove/:productId/:filename" method="GET">
+        <service class="Vendic\RoheconApi\Api\FileInterface" method="unlinkFileFromProduct"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+    <route url="/V1/rhc-api/file/update_position/:productId/:filename/:position" method="GET">
+        <service class="Vendic\RoheconApi\Api\FileInterface" method="updatePosition"/>
+        <resources>
+            <resource ref="Vendic_RoheconApi::api"/>
+        </resources>
+    </route>
+
+</routes>

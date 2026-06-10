@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="vendic_rohecon_api_update_size_text_swatch"
+             instance="Vendic\RoheconApi\Cron\UpdateSizeTextSwatch" method="execute">
+            <schedule>0 * * * *</schedule>
+        </job>
+        <job name="vendic_rohecon_api_gallery_cleanup"
+             instance="Vendic\RoheconApi\Cron\GalleryCleanupCron" method="execute">
+            <schedule>15 5 * * *</schedule>
+        </job>
+    </group>
+</config>

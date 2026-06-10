@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Vendic\RoheconApi\Api\WelcomeInterface" type="Vendic\RoheconApi\Model\Welcome"/>
+    <preference for="Vendic\RoheconApi\Api\ProductInterface" type="Vendic\RoheconApi\Model\Product"/>
+    <preference for="Vendic\RoheconApi\Api\CategoryInterface" type="Vendic\RoheconApi\Model\Category"/>
+    <preference for="Vendic\RoheconApi\Api\AttributeInterface" type="Vendic\RoheconApi\Model\Attribute"/>
+    <preference for="Vendic\RoheconApi\Api\PartstreamInterface" type="Vendic\RoheconApi\Model\Partstream"/>
+    <preference for="Vendic\RoheconApi\Api\FileInterface" type="Vendic\RoheconApi\Model\File"/>
+    <preference for="Vendic\RoheconApi\Api\VersionInterface" type="Vendic\RoheconApi\Model\Version"/>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="vendic_rohecon_update_swatch_text" xsi:type="object">Vendic\RoheconApi\Console\UpdateSizeSwatchTextCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
