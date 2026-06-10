@@ -30,14 +30,16 @@ class Version implements VersionInterface
      */
     public function version(): array
     {
-        return ['data_item' => $this->getVersionData()];
+        return [
+            'data_item' => $this->getVersionData()
+        ];
     }
 
     public function getVersionData(): array
     {
         return [
             'status_code' => 1,
-            'status_message' => (string)__('version fetched succesfully'),
+            'status_message' => 'Version fetched successfully',
             'version' => $this->moduleVersion->get(),
             'magento_version' => $this->productMetadata->getVersion(),
             'demo' => (int)$this->scopeConfig->getValue(self::XML_PATH_DEMO_NOTICE, ScopeInterface::SCOPE_STORE),

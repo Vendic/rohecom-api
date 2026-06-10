@@ -9,7 +9,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Vendic_RoheconApi::api" title="Rohecon API (UniShop)" sortOrder="100">
+                <resource id="Vendic_RoheconApi::api" title="Vendic Rohecon API (UniShop)" sortOrder="100">
                     <resource id="Vendic_RoheconApi::product" title="Products" sortOrder="10"/>
                     <resource id="Vendic_RoheconApi::category" title="Categories" sortOrder="20"/>
                     <resource id="Vendic_RoheconApi::attribute" title="Attributes" sortOrder="30"/>

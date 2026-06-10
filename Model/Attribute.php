@@ -36,17 +36,12 @@ class Attribute implements AttributeInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws NoSuchEntityException
      */
     public function attributeOptionsList(string $aid): array
     {
-        try {
-            $options = $this->attributeRepository->get($aid)->getOptions() ?? [];
-        } catch (NoSuchEntityException) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Attribute does not exist'),
-            ]);
-        }
+        $options = $this->attributeRepository->get($aid)->getOptions() ?? [];
 
         $data = [];
         foreach ($options as $option) {
@@ -65,71 +60,56 @@ class Attribute implements AttributeInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws LocalizedException
      */
     public function updateAttributeLabel(int $aid, int $optionId, string $jsonValues, int $position): array
     {
-        try {
-            $labels = $this->decodeStoreLabels($jsonValues);
-            $attribute = $this->eavConfig->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $aid);
+        $labels = $this->decodeStoreLabels($jsonValues);
+        $attribute = $this->eavConfig->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $aid);
 
-            $option = $this->attributeOptionFactory->create();
-            $option->setSortOrder($position);
-            $option->setLabel($this->resolveDefaultLabel($attribute, $labels, $optionId));
-            $option->setStoreLabels($this->buildStoreLabels($labels));
+        $option = $this->attributeOptionFactory->create();
+        $option->setSortOrder($position);
+        $option->setLabel($this->resolveDefaultLabel($attribute, $labels, $optionId));
+        $option->setStoreLabels($this->buildStoreLabels($labels));
 
-            $this->attributeOptionUpdate->update(
-                ProductAttributeInterface::ENTITY_TYPE_CODE,
-                (string)$attribute->getAttributeCode(),
-                $optionId,
-                $option
-            );
-        } catch (NoSuchEntityException) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Attribute does not exist'),
-            ]);
-        } catch (LocalizedException $e) {
-            return $this->prepareData([
-                'status_code' => 400,
-                'status_message' => $e->getMessage(),
-            ]);
-        }
+        $this->attributeOptionUpdate->update(
+            ProductAttributeInterface::ENTITY_TYPE_CODE,
+            (string)$attribute->getAttributeCode(),
+            $optionId,
+            $option
+        );
 
-        return $this->prepareData([
-            'status_code' => 1,
-            'status_message' => 'succesfully updated attribute option',
-        ]);
+        return [
+            'data_item' => [
+                'status_code' => 1,
+                'status_message' => 'Successfully updated attribute option',
+            ]
+        ];
     }
 
     /**
      * @inheritDoc
+     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getAttributeFrontendLabels(int $attributeId): array
     {
-        try {
-            $attributeCode = (string)$this->eavConfig
-                ->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $attributeId)
-                ->getAttributeCode();
+        $attributeCode = (string)$this->eavConfig
+            ->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $attributeId)
+            ->getAttributeCode();
 
-            $frontendLabels = $this->attributeRepository->get($attributeCode)->getFrontendLabels();
-        } catch (NoSuchEntityException | LocalizedException) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Attribute does not exist'),
-            ]);
-        }
+        $frontendLabels = $this->attributeRepository->get($attributeCode)->getFrontendLabels();
 
         if ($frontendLabels === []) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Attribute does not exist'),
-            ]);
+            throw new NoSuchEntityException(__('Attribute does not exist'));
         }
 
         $result = [];
         foreach ($frontendLabels as $frontendLabel) {
             $result[] = [
-                'store_id' => $frontendLabel->getStoreId(),
+                'store_id' => (string)$frontendLabel->getStoreId(),
                 'value' => $frontendLabel->getLabel(),
             ];
         }
@@ -188,10 +168,5 @@ class Attribute implements AttributeInterface
         }
 
         return $storeLabels;
-    }
-
-    private function prepareData(array $payload): array
-    {
-        return ['data_item' => $payload];
     }
 }

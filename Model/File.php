@@ -10,6 +10,7 @@ namespace Vendic\RoheconApi\Model;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
@@ -21,7 +22,7 @@ class File implements FileInterface
 {
     private const string UPLOAD_DIR = 'upload';
     private const string MANIFEST = 'manifest.json';
-    private const int MAX_FILE_BYTES = 20971520; // 20 MB
+    private const int MAX_FILE_BYTES = 20971520;
 
     public function __construct(
         private readonly ProductRepositoryInterface $productRepository,
@@ -32,46 +33,36 @@ class File implements FileInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
     public function fileAdd(string $filename, string $label, string $productId, string $position, string $data)
     {
-        // UniShop (Delphi) sends these quoted-printable encoded.
         $filename = $this->sanitizeFilename(quoted_printable_decode($filename));
         $label = quoted_printable_decode($label);
         $pid = (int)$productId;
 
-        try {
-            // Throws NoSuchEntityException when the product does not exist.
-            $this->productRepository->getById($pid);
+        $this->productRepository->getById($pid);
 
-            $binary = base64_decode($data, true);
-            if ($binary === false) {
-                throw new LocalizedException(__('Invalid base64 file data'));
-            }
-            if (strlen($binary) > self::MAX_FILE_BYTES) {
-                throw new LocalizedException(__('File exceeds the maximum allowed size'));
-            }
-
-            $this->getMediaWriter()->writeFile(self::UPLOAD_DIR . '/' . $pid . '/' . $filename, $binary);
-
-            $manifest = $this->getManifest($pid);
-            $manifest[] = ['filename' => $filename, 'label' => $label, 'position' => $position];
-            $this->saveManifest($pid, $manifest);
-        } catch (NoSuchEntityException) {
-            return $this->prepareResponseData([
-                'status_code' => 404,
-                'status_message' => (string)__('Product does not exist'),
-            ]);
-        } catch (LocalizedException $e) {
-            return $this->prepareResponseData([
-                'status_code' => 400,
-                'status_message' => $e->getMessage(),
-            ]);
+        $binary = base64_decode($data, true);
+        if ($binary === false) {
+            throw new LocalizedException(__('Invalid base64 file data'));
         }
+        if (strlen($binary) > self::MAX_FILE_BYTES) {
+            throw new LocalizedException(__('File exceeds the maximum allowed size'));
+        }
+
+        $this->getMediaWriter()->writeFile(self::UPLOAD_DIR . '/' . $pid . '/' . $filename, $binary);
+
+        $manifest = $this->getManifest($pid);
+        $manifest[] = ['filename' => $filename, 'label' => $label, 'position' => $position];
+
+        $this->saveManifest($pid, $manifest);
 
         return $this->prepareResponseData([
             'status_code' => 1,
-            'status_message' => 'succesfully saved file',
+            'status_message' => 'Successfully saved file',
             'new_file' => $filename,
             'productId' => $productId,
             'position' => $position,
@@ -107,6 +98,8 @@ class File implements FileInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws FileSystemException
      */
     public function unlinkFileFromProduct(string $productId, string $filename)
     {
@@ -124,12 +117,14 @@ class File implements FileInterface
 
         return $this->prepareResponseData([
             'status_code' => 1,
-            'status_message' => 'File removed succesfully',
+            'status_message' => 'File removed successfully',
         ]);
     }
 
     /**
      * @inheritDoc
+     *
+     * @throws FileSystemException
      */
     public function updatePosition(string $productId, string $filename, string $position)
     {
@@ -142,21 +137,21 @@ class File implements FileInterface
 
         return $this->prepareResponseData([
             'status_code' => 1,
-            'status_message' => 'succesfully updated position',
+            'status_message' => 'Successfully updated position',
             'filename' => $filename,
             'productId' => $productId,
             'position' => $position,
         ]);
     }
 
-    /**
-     * Strip any directory component so the value can never escape the upload dir.
-     */
     private function sanitizeFilename(string $filename): string
     {
         return basename(str_replace('\\', '/', $filename));
     }
 
+    /**
+     * @throws FileSystemException
+     */
     private function getMediaWriter(): WriteInterface
     {
         return $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
@@ -181,6 +176,9 @@ class File implements FileInterface
         return is_array($decoded) ? $decoded : [];
     }
 
+    /**
+     * @throws FileSystemException
+     */
     private function saveManifest(int $productId, array $manifest): void
     {
         $writer = $this->getMediaWriter();

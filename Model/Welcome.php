@@ -20,7 +20,7 @@ class Welcome implements WelcomeInterface
         return [
             'data_item' => [
                 'status_code' => 1,
-                'status_message' => (string)__('Welkom, dit is de Rohecom Magento 2 API'),
+                'status_message' => 'Welkom, dit is de Rohecom Magento 2 API',
             ],
         ];
     }

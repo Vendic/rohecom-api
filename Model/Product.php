@@ -13,8 +13,8 @@ use Magento\Catalog\Api\ProductAttributeMediaGalleryManagementInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\StateException;
 use Vendic\RoheconApi\Api\ProductInterface;
 
 class Product implements ProductInterface
@@ -28,23 +28,21 @@ class Product implements ProductInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws NoSuchEntityException
      */
     public function getProductSkuById(int $pid): array
     {
         if (!$pid) {
             return $this->prepareData([
                 'status_code' => 203,
-                'status_message' => (string)__('No product id provided'),
+                'status_message' => 'No product id provided',
             ]);
         }
 
         $rows = $this->productResource->getProductsSku([$pid]);
-
         if (!$rows) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Product does not exist'),
-            ]);
+            throw new NoSuchEntityException(__('Product does not exist'));
         }
 
         return $this->prepareData(['sku' => $rows[0]['sku']]);
@@ -52,65 +50,50 @@ class Product implements ProductInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws NoSuchEntityException
      */
     public function getWebsiteIdsBySku(string $sku): array
     {
-        try {
-            /** @var ProductModel $product */
-            $product = $this->productRepository->get($sku);
-        } catch (NoSuchEntityException) {
-            return $this->prepareData([
-                'status_code' => 404,
-                'status_message' => (string)__('Product does not exist'),
-            ]);
-        }
+        /** @var ProductModel $product */
+        $product = $this->productRepository->get($sku);
 
         return $this->prepareData(['websites' => $product->getWebsiteIds()]);
     }
 
     /**
      * @inheritDoc
+     *
+     * @throws NoSuchEntityException
+     * @throws StateException
      */
     public function removeProductImage(string $sku = '', string $image = ''): array
     {
         if (!$sku) {
             return $this->prepareData([
                 'status_code' => 203,
-                'status_message' => (string)__('No sku provided'),
+                'status_message' => 'No sku provided',
             ]);
         }
 
-        try {
-            $product = $this->productRepository->get($sku);
-            $entryIds = $this->resolveEntryIds($product, $image);
+        $product = $this->productRepository->get($sku);
+        $entryIds = $this->resolveEntryIds($product, $image);
 
-            if ($image && $entryIds === []) {
-                return $this->prepareData([
-                    'status_code' => 404,
-                    'status_message' => (string)__('Image not found on product'),
-                ]);
-            }
-
-            foreach ($entryIds as $entryId) {
-                $this->mediaGalleryManagement->remove($sku, $entryId);
-            }
-        } catch (NoSuchEntityException) {
+        if ($image && $entryIds === []) {
             return $this->prepareData([
                 'status_code' => 404,
-                'status_message' => (string)__('Product does not exist'),
+                'status_message' => 'Image not found on product',
             ]);
-        } catch (LocalizedException $e) {
-            return $this->prepareData([
-                'status_code' => 400,
-                'status_message' => $e->getMessage(),
-            ]);
+        }
+
+        foreach ($entryIds as $entryId) {
+            $this->mediaGalleryManagement->remove($sku, $entryId);
         }
 
         return $this->prepareData([
             'status_code' => 1,
-            'status_message' => (string)__('Product image removed'),
+            'status_message' => 'Product image removed',
             'sku' => $sku,
-            'image' => $image,
             'removed' => count($entryIds),
         ]);
     }

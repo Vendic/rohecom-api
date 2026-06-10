@@ -44,20 +44,15 @@ class Partstream implements PartstreamInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws LocalizedException
      */
     public function partstreamInfo(): array
     {
-        try {
-            return $this->prepareData([
-                'categoryId' => $this->getOrCreateCategory($this->getFirstRootCategoryId()),
-                'attributeSetId' => $this->getOrCreateAttributeSet(),
-            ]);
-        } catch (LocalizedException $e) {
-            return $this->prepareData([
-                'status_code' => 400,
-                'status_message' => $e->getMessage(),
-            ]);
-        }
+        return $this->prepareData([
+            'categoryId' => $this->getOrCreateCategory($this->getFirstRootCategoryId()),
+            'attributeSetId' => $this->getOrCreateAttributeSet(),
+        ]);
     }
 
     /**
