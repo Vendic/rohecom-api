@@ -1,0 +1,17 @@
+{
+    "name": "vendic/rohecon-api",
+    "description": "Rohecon (UniShop) RHC-API integration for Magento 2.",
+    "type": "magento2-module",
+    "require": {
+        "php": "~8.4.0",
+        "composer-runtime-api": "^2.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Vendic\\RoheconApi\\": ""
+        }
+    }
+}
