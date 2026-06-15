@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_save_before">
+        <observer name="vendic_rohecon_api_catalog_product_before_save"
+                  instance="Vendic\RoheconApi\Observer\ConfigurableProductPriceCleanup"/>
+    </event>
+</config>

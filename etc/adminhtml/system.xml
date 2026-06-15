@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="vendic" translate="label" sortOrder="1000">
+            <label>Vendic</label>
+        </tab>
+        <section id="vendic_rohecon_api" translate="label" sortOrder="10"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Rohecon API</label>
+            <tab>vendic</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="cron" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cron</label>
+                <field id="gallery_cleanup_cron_enabled" translate="label" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Gallery cleanup enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) Vendic B.V https://vendic.nl/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Vendic_RoheconApi::api" title="Vendic Rohecon API (UniShop)" sortOrder="100">
+                    <resource id="Vendic_RoheconApi::product" title="Products" sortOrder="10"/>
+                    <resource id="Vendic_RoheconApi::category" title="Categories" sortOrder="20"/>
+                    <resource id="Vendic_RoheconApi::attribute" title="Attributes" sortOrder="30"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
