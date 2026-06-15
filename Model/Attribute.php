@@ -11,12 +11,8 @@ namespace Vendic\RoheconApi\Model;
 use InvalidArgumentException;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
-use Magento\Eav\Api\AttributeOptionUpdateInterface;
-use Magento\Eav\Api\Data\AttributeOptionInterfaceFactory;
-use Magento\Eav\Api\Data\AttributeOptionLabelInterface;
-use Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory;
 use Magento\Eav\Model\Config as EavConfig;
-use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -24,12 +20,13 @@ use Vendic\RoheconApi\Api\AttributeInterface;
 
 class Attribute implements AttributeInterface
 {
+    private const string OPTION_VALUE_TABLE = 'eav_attribute_option_value';
+    private const string OPTION_TABLE = 'eav_attribute_option';
+
     public function __construct(
         private readonly ProductAttributeRepositoryInterface $attributeRepository,
         private readonly EavConfig $eavConfig,
-        private readonly AttributeOptionUpdateInterface $attributeOptionUpdate,
-        private readonly AttributeOptionInterfaceFactory $attributeOptionFactory,
-        private readonly AttributeOptionLabelInterfaceFactory $attributeOptionLabelFactory,
+        private readonly ResourceConnection $resourceConnection,
         private readonly Json $jsonSerializer
     ) {
     }
@@ -65,33 +62,39 @@ class Attribute implements AttributeInterface
      */
     public function updateAttributeLabel(int $aid, int $optionId, string $jsonValues, int $position): array
     {
-        $labels = $this->decodeStoreLabels($jsonValues);
-        $attribute = $this->eavConfig->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $aid);
+        $connection = $this->resourceConnection->getConnection();
 
-        $option = $this->attributeOptionFactory->create();
-        $option->setSortOrder($position);
-        $option->setLabel($this->resolveDefaultLabel($attribute, $labels, $optionId));
-        $option->setStoreLabels($this->buildStoreLabels($labels));
+        foreach ($this->decodeStoreLabels($jsonValues) as $storeId => $label) {
+            $connection->update(
+                $this->resourceConnection->getTableName(self::OPTION_VALUE_TABLE),
+                ['value' => (string)$label],
+                [
+                    'store_id = ?' => (int)$storeId,
+                    'option_id = ?' => $optionId,
+                ]
+            );
+        }
 
-        $this->attributeOptionUpdate->update(
-            ProductAttributeInterface::ENTITY_TYPE_CODE,
-            (string)$attribute->getAttributeCode(),
-            $optionId,
-            $option
+        $connection->update(
+            $this->resourceConnection->getTableName(self::OPTION_TABLE),
+            ['sort_order' => $position],
+            [
+                'attribute_id = ?' => $aid,
+                'option_id = ?' => $optionId,
+            ]
         );
 
         return [
             'data_item' => [
                 'status_code' => 1,
-                'status_message' => 'Successfully updated attribute option',
-            ]
+                'status_message' => 'succesfully updated attribute option',
+            ],
         ];
     }
 
     /**
      * @inheritDoc
      *
-     * @throws LocalizedException
      * @throws NoSuchEntityException
      */
     public function getAttributeFrontendLabels(int $attributeId): array
@@ -133,40 +136,5 @@ class Attribute implements AttributeInterface
         }
 
         return $values;
-    }
-
-    /**
-     * @throws LocalizedException
-     */
-    private function resolveDefaultLabel(AbstractAttribute $attribute, array $labels, int $optionId): string
-    {
-        if (isset($labels[0])) {
-            return (string)$labels[0];
-        }
-
-        $currentLabel = $attribute->getSource()->getOptionText($optionId);
-
-        return is_string($currentLabel) ? $currentLabel : '';
-    }
-
-    /**
-     * @return AttributeOptionLabelInterface[]
-     */
-    private function buildStoreLabels(array $labels): array
-    {
-        $storeLabels = [];
-
-        foreach ($labels as $storeId => $label) {
-            if ((int)$storeId === 0) {
-                continue;
-            }
-
-            $storeLabel = $this->attributeOptionLabelFactory->create();
-            $storeLabel->setStoreId((int)$storeId);
-            $storeLabel->setLabel((string)$label);
-            $storeLabels[] = $storeLabel;
-        }
-
-        return $storeLabels;
     }
 }
