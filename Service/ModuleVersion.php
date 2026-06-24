@@ -17,7 +17,12 @@ class ModuleVersion
 {
     private const string PACKAGE_NAME = 'vendic/rohecon-api';
 
-    private ?string $version = null;
+    /**
+     * Set version to 2.0.6 since integration of rohecon software based on hardcoded 2.0.6 version.
+     *
+     * @var string|null
+     */
+    private ?string $version = '2.0.6';
 
     public function get(): string
     {
