@@ -51,21 +51,6 @@ bin/magento setup:upgrade
 bin/magento setup:di:compile
 ```
 
-## Upgrading from `vendic/rohecon-api`
-
-The module used to be called `Vendic_RoheconApi`. Swap the package and enable the new module:
-
-```bash
-composer remove vendic/rohecon-api
-composer require vendic/rohecom-api
-bin/magento module:enable Vendic_RohecomApi
-bin/magento setup:upgrade
-```
-
-The `MigrateFromRoheconApi` data patch moves the integration's ACL grants
-(`Vendic_RoheconApi::*` → `Vendic_RohecomApi::*`) and the `vendic_rohecon_api/*` config to the new
-names, so UniShop keeps its access. The API URLs did not change.
-
 ## Notes
 - Gallery-cleanup cron is off by default: **Stores → Configuration → Vendic → Rohecom API → Cron**.
 
