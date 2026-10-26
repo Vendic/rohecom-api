@@ -7,10 +7,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <vendic_rohecon_api>
+        <vendic_rohecom_api>
             <cron>
                 <gallery_cleanup_cron_enabled>0</gallery_cleanup_cron_enabled>
             </cron>
-        </vendic_rohecon_api>
+        </vendic_rohecom_api>
     </default>
 </config>

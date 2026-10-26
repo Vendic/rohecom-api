@@ -6,13 +6,13 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Store\Model\ScopeInterface;
-use Vendic\RoheconApi\Api\VersionInterface;
-use Vendic\RoheconApi\Service\ModuleVersion;
+use Vendic\RohecomApi\Api\VersionInterface;
+use Vendic\RohecomApi\Service\ModuleVersion;
 
 class Version implements VersionInterface
 {

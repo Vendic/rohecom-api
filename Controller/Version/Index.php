@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Controller\Version;
+namespace Vendic\RohecomApi\Controller\Version;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\ResultInterface;
-use Vendic\RoheconApi\Model\Version;
+use Vendic\RohecomApi\Model\Version;
 
 class Index implements HttpGetActionInterface
 {

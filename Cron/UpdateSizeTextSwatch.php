@@ -6,10 +6,10 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Cron;
+namespace Vendic\RohecomApi\Cron;
 
 use Throwable;
-use Vendic\RoheconApi\Service\SwatchTextUpdater;
+use Vendic\RohecomApi\Service\SwatchTextUpdater;
 
 class UpdateSizeTextSwatch
 {

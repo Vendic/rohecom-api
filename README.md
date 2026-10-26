@@ -1,6 +1,6 @@
-# Vendic_RoheconApi
+# Vendic_RohecomApi
 
-Rohecon (UniShop) RHC-API integration for Magento 2. Mirrors the original RHC-API URLs and JSON
+Rohecom (UniShop) RHC-API integration for Magento 2. Mirrors the original RHC-API URLs and JSON
 responses, but every endpoint requires a valid Magento bearer token (no anonymous access).
 
 ## Endpoints
@@ -31,12 +31,16 @@ Frontend (public, no token) — `GET /rhc-api/version/`.
 
 ## Authentication
 
-Grant the integration UniShop uses access to the **Vendic Rohecon API** ACL resource:
+Grant the integration UniShop uses access to the **Vendic Rohecom API** ACL resource:
 **System → Extensions → Integrations** → the UniShop integration → **API → Resource Access** →
-enable *Vendic Rohecon API* (or just its *Products* / *Categories* / *Attributes* sub-resources).
+enable *Vendic Rohecom API* (or just its *Products* / *Categories* / *Attributes* sub-resources).
 UniShop keeps sending the same `Bearer` token.
 
 ## Install
+
+```bash
+composer require vendic/rohecom-api
+```
 
 The legacy `rohecom/unishop` package defines the same routes and `rhc-api` frontName, so remove it
 first:
@@ -48,4 +52,8 @@ bin/magento setup:di:compile
 ```
 
 ## Notes
-- Gallery-cleanup cron is off by default: **Stores → Configuration → Vendic → Rohecon API → Cron**.
+- Gallery-cleanup cron is off by default: **Stores → Configuration → Vendic → Rohecom API → Cron**.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

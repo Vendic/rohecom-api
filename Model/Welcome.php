@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
-use Vendic\RoheconApi\Api\WelcomeInterface;
+use Vendic\RohecomApi\Api\WelcomeInterface;
 
 class Welcome implements WelcomeInterface
 {

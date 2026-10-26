@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Service;
+namespace Vendic\RohecomApi\Service;
 
 use Composer\InstalledVersions;
 
@@ -15,10 +15,10 @@ use Composer\InstalledVersions;
  */
 class ModuleVersion
 {
-    private const string PACKAGE_NAME = 'vendic/rohecon-api';
+    private const string PACKAGE_NAME = 'vendic/rohecom-api';
 
     /**
-     * Set version to 2.0.6 since integration of rohecon software based on hardcoded 2.0.6 version.
+     * Set version to 2.0.6 since integration of rohecom software based on hardcoded 2.0.6 version.
      *
      * @var string|null
      */

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Api;
+namespace Vendic\RohecomApi\Api;
 
 /**
  * @api
