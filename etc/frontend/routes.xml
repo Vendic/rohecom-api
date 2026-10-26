@@ -8,7 +8,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
         <route id="rhc_api" frontName="rhc-api">
-            <module name="Vendic_RoheconApi"/>
+            <module name="Vendic_RohecomApi"/>
         </route>
     </router>
 </config>

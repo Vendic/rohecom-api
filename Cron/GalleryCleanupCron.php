@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Cron;
+namespace Vendic\RohecomApi\Cron;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 
 class GalleryCleanupCron
 {
-    private const string XML_PATH_ENABLED = 'vendic_rohecon_api/cron/gallery_cleanup_cron_enabled';
+    private const string XML_PATH_ENABLED = 'vendic_rohecom_api/cron/gallery_cleanup_cron_enabled';
     private const string GALLERY_TABLE = 'catalog_product_entity_media_gallery';
     private const string MEDIA_PATH_PREFIX = 'catalog/product/';
 

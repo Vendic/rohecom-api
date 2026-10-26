@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Observer;
+namespace Vendic\RohecomApi\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;

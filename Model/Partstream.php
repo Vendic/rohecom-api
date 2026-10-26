@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
 use Magento\Catalog\Api\CategoryManagementInterface;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
@@ -23,7 +23,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Vendic\RoheconApi\Api\PartstreamInterface;
+use Vendic\RohecomApi\Api\PartstreamInterface;
 
 class Partstream implements PartstreamInterface
 {

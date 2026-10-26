@@ -10,9 +10,9 @@
         <tab id="vendic" translate="label" sortOrder="1000">
             <label>Vendic</label>
         </tab>
-        <section id="vendic_rohecon_api" translate="label" sortOrder="10"
+        <section id="vendic_rohecom_api" translate="label" sortOrder="10"
                  showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Rohecon API</label>
+            <label>Rohecom API</label>
             <tab>vendic</tab>
             <resource>Magento_Config::config</resource>
             <group id="cron" translate="label" type="text" sortOrder="10"

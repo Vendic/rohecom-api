@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface as CatalogProductInterface;
 use Magento\Catalog\Api\ProductAttributeMediaGalleryManagementInterface;
@@ -15,7 +15,7 @@ use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
-use Vendic\RoheconApi\Api\ProductInterface;
+use Vendic\RohecomApi\Api\ProductInterface;
 
 class Product implements ProductInterface
 {

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
 use Magento\Catalog\Api\CategoryManagementInterface;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
@@ -19,7 +19,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
-use Vendic\RoheconApi\Api\CategoryInterface;
+use Vendic\RohecomApi\Api\CategoryInterface;
 
 class Category implements CategoryInterface
 {

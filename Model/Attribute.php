@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Vendic\RoheconApi\Model;
+namespace Vendic\RohecomApi\Model;
 
 use InvalidArgumentException;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
@@ -16,7 +16,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
-use Vendic\RoheconApi\Api\AttributeInterface;
+use Vendic\RohecomApi\Api\AttributeInterface;
 
 class Attribute implements AttributeInterface
 {

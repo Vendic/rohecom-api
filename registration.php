@@ -7,4 +7,4 @@ declare(strict_types=1);
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Vendic_RoheconApi', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Vendic_RohecomApi', __DIR__);
